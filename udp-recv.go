@@ -32,12 +32,23 @@ func main() {
 		usage()
 	}
 	fmt.Println("port:", port)
-        server := fmt.Sprintf("255.255.255.0:%d", port)
+        server := fmt.Sprintf(":%d", port)
+        //server := fmt.Sprintf("255.255.255.0:%d", port)
 	addr, err := net.ResolveUDPAddr("udp", server)
 	checkErr(err)
-	serverConn, err := net.ListenMulticastUDP( "udp", nil, addr)
+	serverConn, err := net.ListenUDP( "udp", addr)
 	checkErr(err)
+	defer serverConn.Close()
 	fmt.Println(serverConn)
+
+	buf := make([]byte, 1024)
+
+	for {
+		n, addr, err := serverConn.ReadFromUDP(buf)
+		checkErr(err)
+		fmt.Println("recv: \"%s\" from \"%s\" \n", string(buf[:n]), addr)
+	}
+
 }
 //func ListenMulticastUDP(network string, ifi *Interface, gaddr *UDPAddr) (*UDPConn, error)
 
