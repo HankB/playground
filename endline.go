@@ -29,15 +29,18 @@ hbarta@swanky:~/Documents/go-wks/src/github.com/HankB/playground$ hexdump -C ~/g
 hbarta@swanky:~/Documents/go-wks/src/github.com/HankB/playground$
 */
 func endLine(str []byte) {
-	fmt.Printf("len = %d, strlen = %d\n", len(str), strlen(str))
-  /*
-	add := fill - strlen(str)
-	for i := 0; i < add; i++ {
-		str = append(str, ' ')
-	}
-  */
-	fmt.Printf("|%s|\n", str)
-  fmt.Println("|0123456789ABCDEF|")
+  add := fill - strlen(str)
+  if add < 0 {  // test for pathalogical case
+    add = 0
+  }
+  // add spaces so ASCII rep lines up with pervious line
+  for i:=0; i<add; i++ {
+    fmt.Printf("   ")
+  }
+  if add <= fill/2 {
+    fmt.Printf(" ")
+  }
+	fmt.Printf("  |%s|\n", str)
 }
 
 //const str = "abc"
@@ -47,5 +50,7 @@ func main() {
 	str[1] = 'b'
 	str[2] = 'c'
 
+  fmt.Printf("0097e200  5f 61 6d ")
 	endLine(str)
+  fmt.Println("0097e1f0  5f 73 74 61 72 74 00 63  72 6f 73 73 63 61 6c 6c  |_start.crosscall|")
 }
